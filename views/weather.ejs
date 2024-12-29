@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Dashboard</title>
+    <style>
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f5f5f5;
+        }
+       .weather-form {
+        width: 300px;
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+       .logout-btn {
+        background-color: #f44336;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+       .logout-btn:hover {
+        background-color: #e53935;
+        }
+       h1, h2, p {
+        margin: 0;
+        }
+       h1 {
+        text-align: center;
+        font-size: 24px;
+        }
+       h2 {
+        text-align: center;
+        font-size: 20px;
+        }
+       p {
+        margin-top: 10px;
+        }
+       form {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        }
+       form input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+        }
+       form button {
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        cursor: pointer;
+        }
+       form button:hover {
+        background-color: #45a049;
+        }
+       @media screen and (max-width: 600px) {
+        .weather-form {
+            width: 100%;
+        }
+        form input, form button {
+            width: 100%;
+            margin-bottom: 0;
+            margin-top: 10px;
+        }
+        }
+
+    
+    </style>
+</head>
+<body>
+    <div class="weather-form">
+        <h1>Hello, <%= user.name %>!</h1>
+        <form id="weatherForm">
+            <input type="text" name="city" placeholder="Enter city" />
+            <button type="submit">Get Weather</button>
+        </form>
+        <div id="weatherResult"></div>
+        <button class="logout-btn" onclick="navigate('/logout')">LogOut</button>
+        
+
+    </div>
+    <script>
+        document.getElementById('weatherForm').addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const city = e.target.city.value;
+            const response = await fetch(`/api/weather?city=${city}`);
+            const data = await response.json();
+            const resultDiv = document.getElementById('weatherResult');
+            if (data.error) {
+                resultDiv.textContent = data.error;
+            } else {
+                resultDiv.innerHTML = `<h2>Weather in ${data.name}</h2>
+                                       <p>Temperature: ${data.main.temp}°C</p>
+                                       <p>Condition: ${data.weather[0].description}</p>`;
+            }
+        });
+
+        function navigate(route) {
+            window.location.href = route;
+        }
+    </script>
+</body>
+</html>
